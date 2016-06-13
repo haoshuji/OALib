@@ -15,7 +15,7 @@
 #include "ModelAROWC.h"
 #include "ModelAROWCD.h"
 #include "ModelSOPD.h"
-#include "Global.h"
+// #include "Global.h"
 
 #include <algorithm> //max min function
 #include <iostream>

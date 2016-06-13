@@ -22,7 +22,7 @@
  #include <string>
  #include <stdlib.h>
  #include <math.h>
- #include "Global.h" 
+ // #include "Global.h" 
 
 
  using namespace std;

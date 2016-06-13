@@ -26,7 +26,7 @@ void CModelAROWCD::Learning(CResult *result, CData *data, CParameter *par)
 	}
 
 	clock_t begin, end;
-	int index_tick = 0;
+	size_t index_tick = 0;
 	
 	srand((unsigned)time(NULL));
 
@@ -95,7 +95,7 @@ void CModelAROWCD::Learning(CResult *result, CData *data, CParameter *par)
 		
 		}
 		else{
-			cout << "Unkonw algorithm name:\t" << this->alg_name << endl;
+			cout << "In AROWCD Model, Unkonw algorithm name:" << this->alg_name << endl;
 		}
 
 		end = clock();

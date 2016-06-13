@@ -14,7 +14,7 @@ void CModelPE::Learning(CResult *result, CData *data, CParameter *par)
 	struct CFeature_node *x_t;
 	par->Reset(data->d,data->n);
     clock_t begin, end;
-    int index_tick = 0;
+    size_t index_tick = 0;
 	srand((unsigned)time(NULL));
     begin = clock();	
 
@@ -85,7 +85,7 @@ void CModelPE::Learning(CResult *result, CData *data, CParameter *par)
 			}
 		}
 		else{
-			cout << "Unkonw algorithm name:\t" << this->alg_name << endl;
+			cout << "In PE Model, Unkonw algorithm name:" << this->alg_name << endl;
 		}
         end = clock();          
         if ( ((t+1) % (par->time_ticks) == 0) && index_tick < (par->num_ticks-1))

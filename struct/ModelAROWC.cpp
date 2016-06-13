@@ -32,7 +32,7 @@ void CModelAROWC::Learning(CResult *result, CData *data, CParameter *par)
 	struct CFeature_node *x_t, *x_t_tmp; 
 
 	clock_t begin, end;
-	int index_tick = 0;
+	size_t index_tick = 0;
 	
 	srand((unsigned)time(NULL));
 	begin = clock();
@@ -103,7 +103,7 @@ void CModelAROWC::Learning(CResult *result, CData *data, CParameter *par)
 			}
 		}			
 		else{
-			cout << "Unkonw algorithm name:\t" << this->alg_name << endl;
+			cout << "in AROWC Model, Unkonw algorithm name:" << this->alg_name << endl;
 		}
 
 		end = clock();

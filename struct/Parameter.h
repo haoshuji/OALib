@@ -1,13 +1,15 @@
 #ifndef PARAMETER_H
 #define PARAMETER_H
-#include "Global.h"
-
+// #include "Global.h"
+#include <string>
+#include <iostream>
+using namespace std;
 class CParameter
 {
 	public:
 	//initialize by constructor and set by argv
-	int num_alg, num_fold, index_binary_class;
-	int num_que, num_ticks, time_ticks;
+	size_t num_alg, num_fold, index_binary_class;
+	size_t num_que, num_ticks, time_ticks;
 	
 	int *permutation;
 	//0 \leq bbq_k \leq 1, 
@@ -16,9 +18,19 @@ class CParameter
 	double *w;
 	//vec Sigma_vec;
 
+	bool Mul2Bin, Norm2One;
+
 	double PAI_C, PAII_C;
-	double AROW_r, AROW_eta; //parameters proposed in our algorithms
-	double AROWC_r; //parameter r in crammer AROW algorithm
+	double AROW_r, AROW_eta; 		//parameters proposed in our algorithms
+	double AROWC_r; 				//parameter r in crammer AROW algorithm
+	bool find_PAI_C, find_PAII_C;
+	bool find_AROW_r, find_AROW_eta;
+	bool find_AROWC_r;
+
+	double que_increase_speed,que_increase_speed2;
+	bool Full_Matrix;
+	bool F1_or_acc;
+
 	CParameter();
 
 	void ImportParameters(std::string file_fullpath);
@@ -30,17 +42,7 @@ class CParameter
 	void Reset(int d, int n);
 
 	~CParameter();
-	int Mul2Bin;
-	int Norm2One;
-	int find_AROW_r;	
-	int find_AROW_eta;
-	int find_PAI_C;
-	int find_PAII_C;
-	int find_AROWC_r;
-
-	double que_increase_speed,que_increase_speed2;
-	int Full_Matrix;
-	bool F1_or_acc;
+	
 };
 
 #endif

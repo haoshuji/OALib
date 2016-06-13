@@ -1,27 +1,31 @@
 #include "Parameter.h"
 #include <cmath>
 #include <iostream>
+#include <fstream>
+#include <cstdlib> 
 
 CParameter::CParameter()
-	: Mul2Bin(0)
-	, find_AROW_r(1)
-	, find_AROW_eta(1)
-	, find_PAI_C(1)
-	, find_PAII_C(1)
-	, find_AROWC_r(1)
+	: Mul2Bin(false)
+	, Norm2One(true)
+	, find_PAI_C(true)
+	, find_PAII_C(true)
+	, find_AROW_r(true)
+	, find_AROW_eta(true)
+	, find_AROWC_r(true)
 	, que_increase_speed(2.0)
+	, Full_Matrix(true)
 	, F1_or_acc(false)
 {
     num_alg = 0;
-	num_fold = 5;
+	num_fold = 10;
 	index_binary_class = 1;
 	num_que = 10;
 	num_ticks = 10;	
 	b_start = -10.0;
 
 	index_binary_class = 1;
-	Norm2One = 1;
-	Full_Matrix = 1;
+	Norm2One = true;
+	Full_Matrix = true;
 
 	AROW_r = 0.1;	AROW_eta = 1;
 	AROWC_r = 1;	PAI_C = 1;
@@ -36,12 +40,12 @@ void CParameter::ImportParameters(std::string file_fullpath){
 	std::string name_par;
 	double value_par;
 
-	std::ifstream infile(file_fullpath.c_str());
+	std::ifstream infile(file_fullpath.c_str(), std::ifstream::in);
 
 	while (infile >> name_par >> value_par)
 	{
 		if (!name_par.compare("num_alg"))
-			this->num_alg = (int)value_par;		
+			this->num_alg = (bool)value_par;		
 		else if (!name_par.compare("num_fold"))
 			this->num_fold = (int)value_par;
 		else if (!name_par.compare("index_binary_class"))
@@ -89,7 +93,7 @@ void CParameter::ImportParameters(std::string file_fullpath){
 		else
 		{
 			cout << "Unknonw par in setting file" << file_fullpath << endl;
-			exit(EXIT_FAILURE);
+			// exit(EXIT_FAILURE);
 		}
 	}
 	infile.close();

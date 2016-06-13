@@ -1,0 +1,5 @@
+
+Best PAI_C: 	0.1
+Best PAII_C:	0.1
+Best AROW_r=10	 AROW_eta=10
+Best AROWC_r=0.001

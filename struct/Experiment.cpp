@@ -101,410 +101,434 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   
   par.Initialize(data.d, data.n);
   
-  vector<double> b_last_step;
-  b_last_step.resize(par.num_alg);
-  for(int i=0; i<par.num_alg; i++)
-    b_last_step[i] = 0.0;
+  
   
   CResult result_tmp(par.num_ticks); 
 
-  vector<vector<vector<CResult> > > result;
-  result.resize(par.num_que);
-  for(int i=0; i<par.num_que; i++)
-  {
-    result[i].resize(par.num_alg);
-    for(int j=0; j<par.num_alg; j++)
-    {
-      result[i][j].resize(par.num_fold);
-      for(int k=0; k<par.num_fold; k++)
-        result[i][j][k].Initialize(par.num_ticks);
-    }
-  } 
-
+  
   if (!this->data_name.compare("aloi.b"))
   {
-	  par.PAI_C = 0.25;
-	  par.PAII_C = 0.03125;
-	  par.AROW_r = 1;
-	  par.AROW_eta = 16;
-	  par.find_AROW_eta = 0;
-	  par.find_AROW_r = 0;
-	  par.find_PAII_C = 0;
-	  par.find_PAI_C = 0;
+	  par.PAI_C = 0.25;		  	par.find_PAI_C = 0;
+	  par.PAII_C = 0.03125;	  	par.find_PAII_C = 0;
+	  par.AROW_r = 1;		  	par.find_AROW_r = 0;
+	  par.AROW_eta = 16;	  	par.find_AROW_eta = 0;	  
   }
   else if (!this->data_name.compare("isolet1.b")){
-	  par.PAI_C = 0.5;
-	  par.PAII_C = 0.25;	 
-	  par.find_PAII_C = 0;
-	  par.find_PAI_C = 0;
-	  /*par.AROW_r = 1;
-	  par.AROW_eta = 16;
-	  par.find_AROW_eta = 0;
-	  par.find_AROW_r = 0;*/
+	  par.PAI_C = 0.5;		  	par.find_PAI_C = 0;
+	  par.PAII_C = 0.25;	  	par.find_PAII_C = 0; 
+	  /*par.AROW_r = 1;	  par.AROW_eta = 16;
+	  par.find_AROW_eta = 0;	  par.find_AROW_r = 0;*/
   }
   else if (!this->data_name.compare("clean.b")){
-	  par.PAI_C = 0.125;
-	  par.PAII_C = 0.03125;
-	  par.find_PAII_C = 0;
-	  par.find_PAI_C = 0;
+	  par.PAI_C = 0.125;	  	par.find_PAI_C = 0;
+	  par.PAII_C = 0.03125;   	par.find_PAII_C = 0;	  
   }
   else if (!this->data_name.compare("dexter.b")){
-	  par.PAI_C = 4;
-	  par.PAII_C = 8;
-	  par.find_PAII_C = 0;
-	  par.find_PAI_C = 0;
+	  par.PAI_C = 4;		  	par.find_PAI_C = 0;
+	  par.PAII_C = 8;		  	par.find_PAII_C = 0;
   }
   else if (!this->data_name.compare("mnist.b")){
-	  par.PAI_C = 25;
-	  par.PAII_C = 0.0625;
-	  par.find_PAII_C = 0;
-	  par.find_PAI_C = 0;
-	  par.AROW_eta = 4;
-	  par.AROW_r = 0.5;
-	  par.find_AROW_eta = 0;
-	  par.find_AROW_r = 0;
+	  par.PAI_C = 25;			par.find_PAI_C = 0;
+	  par.PAII_C = 0.0625;		par.find_PAII_C = 0;
+	  par.AROW_eta = 4;			par.find_AROW_eta = 0;
+	  par.AROW_r = 0.5;			par.find_AROW_r = 0;
   }
   else if (!this->data_name.compare("a8a.b")){
-	  par.PAI_C = 0.25;	  par.PAII_C = 0.0625;
-	  par.find_PAII_C = 0;	  par.find_PAI_C = 0;
-	  par.AROW_eta = 8;	  par.AROW_r = 0.5;
-	  par.find_AROW_eta = 0;	  par.find_AROW_r = 0;	  
+	  par.PAI_C = 0.25;	  		par.find_PAI_C = 0;
+	  par.PAII_C = 0.0625;  	par.find_PAII_C = 0;	  
+	  par.AROW_eta = 8;	  		par.find_AROW_eta = 0;
+	  par.AROW_r = 0.5;		  	par.find_AROW_r = 0;	  
   }
   else if (!this->data_name.compare("webspam.b"))
   {
-	  par.PAI_C = 0.25; par.find_PAI_C = 0;
-	  par.PAII_C = 0.0625; par.find_PAII_C = 0;
-	  par.AROW_r = 0.25; par.find_AROW_r = 0;
-	  par.AROW_eta = 16; par.find_AROW_eta = 0;
-	  par.AROWC_r = 0.03125; par.find_AROWC_r = 0;	  
+	  par.PAI_C = 0.25; 		par.find_PAI_C = 0;
+	  par.PAII_C = 0.0625; 		par.find_PAII_C = 0;
+	  par.AROW_r = 0.25; 		par.find_AROW_r = 0;
+	  par.AROW_eta = 16; 		par.find_AROW_eta = 0;
+	  par.AROWC_r = 0.03125; 	par.find_AROWC_r = 0;	  
   }
   else if (!this->data_name.compare("url.balanced.b"))
   {
-	  par.PAI_C = 1; par.find_PAI_C = 0;
-	  par.PAII_C = 0.5; par.find_PAII_C = 0;
-	  par.AROW_r = 0.0313; par.find_AROW_r = 0;
-	  par.AROW_eta = 8; par.find_AROW_eta = 0;
-	  par.AROWC_r = 0.03125; par.find_AROWC_r = 0;	  
+	  par.PAI_C = 1; 			par.find_PAI_C = 0;
+	  par.PAII_C = 0.5; 		par.find_PAII_C = 0;
+	  par.AROW_r = 0.0313; 		par.find_AROW_r = 0;
+	  par.AROW_eta = 8; 		par.find_AROW_eta = 0;
+	  par.AROWC_r = 0.03125; 	par.find_AROWC_r = 0;	  
   }
   else if (!this->data_name.compare("news20.b"))
   {
-	  par.PAI_C = 8; par.find_PAI_C = 0;
-	  par.PAII_C = 16; par.find_PAII_C = 0;
-	  par.AROW_r = 0.03125; par.find_AROW_r = 0;
-	  par.AROW_eta = 2; par.find_AROW_eta = 0;
-	  par.AROWC_r = 1; par.find_AROWC_r = 0;	  
+	  par.PAI_C = 8; 			par.find_PAI_C = 0;
+	  par.PAII_C = 16; 			par.find_PAII_C = 0;
+	  par.AROW_r = 0.03125; 	par.find_AROW_r = 0;
+	  par.AROW_eta = 2; 		par.find_AROW_eta = 0;
+	  par.AROWC_r = 1; 			par.find_AROWC_r = 0;	  
   }
   else if (!this->data_name.compare("rcv1_train.b"))
   {
-	  par.PAI_C = 1; par.find_PAI_C = 0;
-	  par.PAII_C = 1; par.find_PAII_C = 0;
-	  par.AROW_r = 0.125; par.find_AROW_r = 0;
-	  par.AROW_eta = 2; par.find_AROW_eta = 0;
-	  par.AROWC_r = 0.03125; par.find_AROWC_r = 0;	  
+	  par.PAI_C = 1; 			par.find_PAI_C = 0;
+	  par.PAII_C = 1; 			par.find_PAII_C = 0;
+	  par.AROW_r = 0.125; 		par.find_AROW_r = 0;
+	  par.AROW_eta = 2; 		par.find_AROW_eta = 0;
+	  par.AROWC_r = 0.03125; 	par.find_AROWC_r = 0;	  
   }
   else if (!this->data_name.compare("gisette.b"))
   {
-	  par.PAI_C = 1; par.find_PAI_C = 0;
-	  par.PAII_C = 1; par.find_PAII_C = 0;
-	  par.AROW_r = 2; par.find_AROW_r = 0;
-	  par.AROW_eta = 1; par.find_AROW_eta = 0;
-	  par.AROWC_r = 0.25; par.find_AROWC_r = 0;	  
+	  par.PAI_C = 1; 			par.find_PAI_C = 0;
+	  par.PAII_C = 1; 			par.find_PAII_C = 0;
+	  par.AROW_r = 2; 			par.find_AROW_r = 0;
+	  par.AROW_eta = 1; 		par.find_AROW_eta = 0;
+	  par.AROWC_r = 0.25; 		par.find_AROWC_r = 0;	  
   }
   else if (!this->data_name.compare("url.b"))
   {
-	  par.PAI_C = 0.5; par.find_PAI_C = 0;
-	  par.PAII_C = 0.25; par.find_PAII_C = 0;
-	  par.AROW_r = 0.125; par.find_AROW_r = 0;
-	  par.AROW_eta = 16; par.find_AROW_eta = 0;
-	  par.AROWC_r = 0.0625; par.find_AROWC_r = 0;	  
-  }
-  else{
-	 
+	  par.PAI_C = 0.5; 			par.find_PAI_C = 0;
+	  par.PAII_C = 0.25; 		par.find_PAII_C = 0;
+	  par.AROW_r = 0.125; 		par.find_AROW_r = 0;
+	  par.AROW_eta = 16; 		par.find_AROW_eta = 0;
+	  par.AROWC_r = 0.0625; 	par.find_AROWC_r = 0;	  
   }
   
   Find_best_parameter();
 
  // const char *vinit[] = { "PE", "APE", "RPE", "PA", "APA", "RPA", "PAI", "APAI", "RPAI", "PAII", "APAII", "RPAII", "SOP", "ASOP", "RSOP", "AASOP", "AASOP2", "AROW", "AAROW", "RAROW" };
+  CModel** models = new CModel*[4];  
   vector<string> alg_names;
-  alg_names.push_back("PE"); alg_names.push_back("APE"); alg_names.push_back("RPE");
-  alg_names.push_back("PA"); alg_names.push_back("APA"); alg_names.push_back("RPA");
-  alg_names.push_back("PAI"); alg_names.push_back("APAI"); alg_names.push_back("RPAI");
-  alg_names.push_back("PAII"); alg_names.push_back("APAII"); alg_names.push_back("RPAII");
   
-  CModel** models = new CModel*[5];
   models[0] = new CModelPE;
-  models[1] = new CModelPA;
+  // alg_names.push_back("PE"); 
+  alg_names.push_back("APE"); 
+  // alg_names.push_back("RPE");
   
-  if (par.Full_Matrix == 1)
+  models[1] = new CModelPA;
+  // alg_names.push_back("PA"); 
+  // alg_names.push_back("APA"); 
+  // alg_names.push_back("RPA");
+
+  // alg_names.push_back("PAI"); 
+  // alg_names.push_back("APAI"); 
+  // alg_names.push_back("RPAI");
+
+  // alg_names.push_back("PAII"); 
+  alg_names.push_back("APAII"); 
+  // alg_names.push_back("RPAII");
+  
+  if (par.Full_Matrix == 1) // using full matrix
   {
 	  models[2] = new CModelSOP;
+	  // alg_names.push_back("SOP"); 
+	  alg_names.push_back("ASOP"); 
+	  // alg_names.push_back("RSOP"); 
+	  // alg_names.push_back("AASOP"); alg_names.push_back("AASOP2");
+
 	  models[3] = new CModelAROW;
-	  models[4] = new CModelAROWC;
-	  alg_names.push_back("SOP"); 
-	  alg_names.push_back("ASOP"); alg_names.push_back("RSOP"); 
-	 // alg_names.push_back("AASOP"); alg_names.push_back("AASOP2");
-	  alg_names.push_back("AROW"); alg_names.push_back("AAROW"); alg_names.push_back("AAROW2");alg_names.push_back("RAROW");
-	  alg_names.push_back("AROWC");
+	  alg_names.push_back("AROW"); 
+	  alg_names.push_back("AAROW");  // margin-based query strategy
+	  alg_names.push_back("AAROW2"); // proposed in SOAL article
+	  alg_names.push_back("RAROW");  // random version
+	  
+	  // models[4] = new CModelAROWC;
+	  // alg_names.push_back("AROWC");
   }
-  else
+  else	// using sparce matrix
   {
 	  models[2] = new CModelSOPD;
-	  models[3] = new CModelAROWD;
-	  models[4] = new CModelAROWCD;
-	  alg_names.push_back("SOPD"); 
-	  alg_names.push_back("ASOPD"); alg_names.push_back("RSOPD");
+	  // alg_names.push_back("SOPD"); 
+	  alg_names.push_back("ASOPD"); 
+	  // alg_names.push_back("RSOPD");
 	 // alg_names.push_back("AASOPD"); alg_names.push_back("AASOPD2");
-	  alg_names.push_back("AROWD");alg_names.push_back("AAROWD");  alg_names.push_back("AAROWD2"); alg_names.push_back("RAROWD");
-	  alg_names.push_back("AROWCD");
-  }
-  
-  //learn
-  for(int i=0; i<par.num_que; i++)
-  {      
-      cout << i << "-th query" << endl;
+	  
+	  models[3] = new CModelAROWD;
+	  alg_names.push_back("AROWD");
+	  alg_names.push_back("AAROWD");  
+	  alg_names.push_back("AAROWD2"); 
+	  alg_names.push_back("RAROWD");
 
-	  double b = pow(2.0, (par.b_start + i*par.que_increase_speed));
-      double b2 = pow(2.0, (par.b_start2 + i*par.que_increase_speed2));
-      for(int j=0; j<par.num_fold; j++)
+	  // crammer paper, passive query strategy which query all of the instances
+	  // models[3] = new CModelAROWD;
+	  // alg_names.push_back("AROWCD");
+  }
+
+  vector<double> b_last_step;
+  b_last_step.resize(alg_names.size());
+  for(size_t i=0; i<alg_names.size(); i++)
+    b_last_step[i] = 0.0;
+
+  vector<vector<vector<CResult> > > result;
+  result.resize(par.num_que);
+  for(size_t i=0; i<par.num_que; i++)
+  {
+    result[i].resize(alg_names.size());
+    for(size_t j=0; j<alg_names.size(); j++)
+    {
+      result[i][j].resize(par.num_fold);
+      for(size_t k=0; k<par.num_fold; k++)
+        result[i][j][k].Initialize(par.num_ticks);
+    }
+  } 
+
+
+
+  //learn
+  for(size_t i_que=0; i_que<par.num_que; i_que++)
+  {      
+      cout << i_que << "-th query" << endl;
+
+	  double b = pow(2.0, (par.b_start + i_que*par.que_increase_speed));
+      double b2 = pow(2.0, (par.b_start2 + i_que*par.que_increase_speed2));
+
+      for(size_t j_fold=0; j_fold<par.num_fold; j_fold++)
       {
-          cout << "  " << j << "-th fold" << endl;
+          cout << "  " << j_fold << "-th fold" << endl;
+
+		  cout.precision(3);
           
 		  par.Generate_permutation(data.n);
 		  
-		  int m = 0;
-		  cout.precision(3);
+		  int k_alg = 0;
+		  
 		  //PE
-		  if (i>0)
+		  /*
+		  if (i_que>0)
 		  {
-			  result[i][m][j] = result[0][m][j];
+			  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
 		  }
 		  else{
-			  models[0]->SetAlgName(alg_names[m]);
+			  models[0]->SetAlgName(alg_names[k_alg]);
 			  result_tmp.Reset(); par.Reset(data.d, data.n);
 			  models[0]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
+			  result[i_que][k_alg][j_fold] = result_tmp;
 		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
+		  */
 
 		  //APE
 		  par.b = b;
-		  models[0]->SetAlgName(alg_names[m]);
+		  models[0]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset();	par.Reset(data.d, data.n);
 		  models[0]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
+		  /*
 		  //RPE
 		  par.b = result_tmp.que;
-		  models[0]->SetAlgName(alg_names[m]);
+		  models[0]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[0]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
+		  
 		  //PA
-		  if (i>0)
+		  if (i_que>0)
 		  {
-			  result[i][m][j] = result[0][m][j];
+			  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
 		  }
 		  else{
-			  models[1]->SetAlgName(alg_names[m]);
+			  models[1]->SetAlgName(alg_names[k_alg]);
 			  result_tmp.Reset(); par.Reset(data.d, data.n);
 			  models[1]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
+			  result[i_que][k_alg][j_fold] = result_tmp;
 		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
 		  //APA
 		  par.b = b;
-		  models[1]->SetAlgName(alg_names[m]);
+		  models[1]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[1]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 		  
 		  //RPA
 		  par.b = result_tmp.que;
-		  models[1]->SetAlgName(alg_names[m]);
+		  models[1]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[1]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
 		  //PAI		
-		  if (i>0)
+		  if (i_que>0)
 		  {
-			  result[i][m][j] = result[0][m][j];
+			  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
 		  }
 		  else{
-			  models[1]->SetAlgName(alg_names[m]);
+			  models[1]->SetAlgName(alg_names[k_alg]);
 			  result_tmp.Reset(); par.Reset(data.d, data.n);
 			  models[1]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
+			  result[i_que][k_alg][j_fold] = result_tmp;
 		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
 		  //APAI
 		  par.b = b;
-		  models[1]->SetAlgName(alg_names[m]);
+		  models[1]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[1]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 		  
 		  //RAPI
 		  par.b = result_tmp.que;
-		  models[1]->SetAlgName(alg_names[m]);
+		  models[1]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset();
 		  models[1]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
+		
 
 		  //PAII	
-		  if (i>0)
+		  if (i_que>0)
 		  {
-			  result[i][m][j] = result[0][m][j];
+			  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
 		  }
 		  else{
-			  models[1]->SetAlgName(alg_names[m]);
+			  models[1]->SetAlgName(alg_names[k_alg]);
 			  result_tmp.Reset(); par.Reset(data.d, data.n);
 			  models[1]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
+			  result[i_que][k_alg][j_fold] = result_tmp;
 		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
-
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
+		  */
 		  //APAII
 		  par.b = b;
-		  models[1]->SetAlgName(alg_names[m]);
+		  models[1]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[1]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
+		  /*
 		  //RPAII
 		  par.b = result_tmp.que;
-		  models[1]->SetAlgName(alg_names[m]);
+		  models[1]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[1]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
+		  */
 
-		  //SOP		
-		  if (i>0)
+
+		  //SOP	
+		  /*	
+		  if (i_que>0)
 		  {
-			  result[i][m][j] = result[0][m][j];
+			  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
 		  }
 		  else{
-			  models[2]->SetAlgName(alg_names[m]);
+			  models[2]->SetAlgName(alg_names[k_alg]);
 			  result_tmp.Reset(); par.Reset(data.d, data.n);
 			  models[2]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
+			  result[i_que][k_alg][j_fold] = result_tmp;
 		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
+		  */
 
 		  //ASOP
 		  par.b = b;
-		  models[2]->SetAlgName(alg_names[m]);
+		  models[2]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[2]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
+		  /*
 		  //RSOP
 		  par.b = result_tmp.que;
-		  models[2]->SetAlgName(alg_names[m]);
+		  models[2]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[2]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
-
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
+		  */
 		  ////AASOP
 		  //par.b = b;
-		  //models[2]->SetAlgName(alg_names[m]);
+		  //models[2]->SetAlgName(alg_names[k_alg]);
 		  //result_tmp.Reset(); par.Reset(data.d, data.n);
 		  //models[2]->Learning(&result_tmp, &data, &par);
-		  //result[i][m][j] = result_tmp;
-		  //cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  //m++;
+		  //result[i_que][k_alg][j_fold] = result_tmp;
+		  //cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  //k_alg++;
 
 		  ////AASOP2
 		  //par.b = b;
-		  //models[2]->SetAlgName(alg_names[m]);
+		  //models[2]->SetAlgName(alg_names[k_alg]);
 		  //result_tmp.Reset(); par.Reset(data.d, data.n);
 		  //models[2]->Learning(&result_tmp, &data, &par);
-		  //result[i][m][j] = result_tmp;
-		  //cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  //m++;
+		  //result[i_que][k_alg][j_fold] = result_tmp;
+		  //cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  //k_alg++;
 
 		  //AROW
-		  if (i>0)
+		  if (i_que>0)
 		  {
-			  result[i][m][j] = result[0][m][j];
+			  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
 		  }
 		  else{
-			  models[3]->SetAlgName(alg_names[m]);
+			  models[3]->SetAlgName(alg_names[k_alg]);
 			  result_tmp.Reset(); par.Reset(data.d, data.n);
 			  models[3]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
+			  result[i_que][k_alg][j_fold] = result_tmp;
 		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
 		  //AAROW
 		  par.b = b;
-		  models[3]->SetAlgName(alg_names[m]);
+		  models[3]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[3]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
 		  //AAROW2
 		  par.b = b2;
-		  models[3]->SetAlgName(alg_names[m]);
+		  models[3]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[3]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
 		  //RAROW
 		  par.b = result_tmp.que;
-		  models[3]->SetAlgName(alg_names[m]);
+		  models[3]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[3]->Learning(&result_tmp, &data, &par);
-		  result[i][m][j] = result_tmp;
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  result[i_que][k_alg][j_fold] = result_tmp;
+		  cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  k_alg++;
 
-		   //AROWC
-		  if (i>0)
-		  {
-			  result[i][m][j] = result[0][m][j];
-		  }
-		  else{
-			  models[4]->SetAlgName(alg_names[m]);
-			  result_tmp.Reset(); par.Reset(data.d, data.n);
-			  models[4]->Learning(&result_tmp, &data, &par);
-			  result[i][m][j] = result_tmp;
-		  }
-		  cout << alg_names[m] << "\t" << result[i][m][j].que << "\t" << result[i][m][j].acc << "\t" << result[i][m][j].time << endl;
-		  m++;
+		  //  //AROWC
+		  // if (i_que>0)
+		  // {
+			 //  result[i_que][k_alg][j_fold] = result[0][k_alg][j_fold];
+		  // }
+		  // else{
+			 //  models[4]->SetAlgName(alg_names[k_alg]);
+			 //  result_tmp.Reset(); par.Reset(data.d, data.n);
+			 //  models[4]->Learning(&result_tmp, &data, &par);
+			 //  result[i_que][k_alg][j_fold] = result_tmp;
+		  // }
+		  // cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
+		  // k_alg++;
 
       }//end of second loop, cross validation      
   }//end of first loop, different query ratio
@@ -514,21 +538,21 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   //initial
   std::vector<vector<CResult> > res_que_alg;
   res_que_alg.resize(par.num_que);
-  for (int i = 0; i < par.num_que; ++i)
+  for (size_t i = 0; i < par.num_que; ++i)
   {
-	  res_que_alg[i].resize(par.num_alg);
-	  for (int j = 0; j < par.num_alg; ++j)
+	  res_que_alg[i].resize(alg_names.size());
+	  for (size_t j = 0; j < alg_names.size(); ++j)
 	  {
 		  res_que_alg[i][j].Initialize(par.num_ticks);
 	  }
   }
 
   //sum of fold
-  for (int i = 0; i < par.num_que; ++i)
+  for (size_t i = 0; i < par.num_que; ++i)
   {
-	  for (int j = 0; j < par.num_alg; ++j)
+	  for (size_t j = 0; j < alg_names.size(); ++j)
 	  {
-		  for (int k = 0; k < par.num_fold; ++k)
+		  for (size_t k = 0; k < par.num_fold; ++k)
 		  {
 			  res_que_alg[i][j] = res_que_alg[i][j] + result[i][j][k];
 		  }
@@ -536,21 +560,21 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   }
 
   //average
-  for (int i = 0; i < par.num_que; ++i)
+  for (size_t i = 0; i < par.num_que; ++i)
   {
-	  for (int j = 0; j < par.num_alg; ++j)
+	  for (size_t j = 0; j < alg_names.size(); ++j)
 	  {
 		  res_que_alg[i][j] = res_que_alg[i][j] / par.num_fold;
 	  }
   }
 
   //compute standard deviation
-  for (int i = 0; i < par.num_que; ++i)
+  for (size_t i = 0; i < par.num_que; ++i)
   {
-	  for (int j = 0; j < par.num_alg; ++j)
+	  for (size_t j = 0; j < alg_names.size(); ++j)
 	  {
 		  double que_tmp = 0.0, acc_tmp = 0.0, time_tmp = 0.0, F1_tmp = 0.0;
-		  for (int k = 0; k < par.num_fold; k++)
+		  for (size_t k = 0; k < par.num_fold; k++)
 		  {
 			  que_tmp += pow(res_que_alg[i][j].que-result[i][j][k].que,2);
 			  acc_tmp += pow(res_que_alg[i][j].acc-result[i][j][k].acc,2);
@@ -568,59 +592,68 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   string output_file_fullpath = output_dir + this->data_name+".txt";
   cout << "output_file_name = " << output_file_fullpath << endl;
   ofstream out_file(output_file_fullpath.c_str());
-  for (int j = 0; j<par.num_alg; j++)
+  for (size_t j = 0; j<alg_names.size(); j++)
   {
 	  //different query_ratio
-	  for (int i = 0; i<par.num_que; i++)
+  	  out_file << alg_names[j] << endl;
+  	  out_file << "que ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].que << " ";
 	  }
 	  out_file << endl;
 
 	  //std_que
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "std_que ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].std_que << " ";
 	  }
 	  out_file << endl;
 
 	  //different query accuracy
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "acc ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].acc << " ";
 	  }
 	  out_file << endl;
 
 	  //std_acc
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "std_acc ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].std_acc << " ";
 	  }
 	  out_file << endl;
 
 	  //different f1 measure
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "f1 ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].F1 << " ";
 	  }
 	  out_file << endl;
 
 	  //std_f1
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "std_f1 ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].std_F1 << " ";
 	  }
 	  out_file << endl;
 
 	  //different time
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "time ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].time << " ";
 	  }
 	  out_file << endl;	 
 
 	  //std_time
-	  for (int i = 0; i<par.num_que; i++)
+	  out_file << "std_time ";
+	  for (size_t i = 0; i<par.num_que; i++)
 	  {
 		  out_file << res_que_alg[i][j].std_time << " ";
 	  }
@@ -629,23 +662,25 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   out_file.close();
   
   //output fixed query ratio
-  string of_name = output_dir + this->data_name;
-  of_name += "_fixed.txt";
-  ofstream of;
-  of.open(of_name.c_str());
+  string of_name = output_dir + this->data_name + "_fixed.txt";
+  ofstream of(of_name.c_str());
+
   of.precision(3);
   of << std::fixed;
+
+  //write basic information
   of << "Data\t" << " # Features\t" << "# Instances\t"<<" # Positive Instances\t" << "# Negative Instances" << endl;
   of << this->data_name << "\t" << data.d << "\t" << data.n <<"\t" << data.num_pos << "\t" <<data.num_neg<< endl;
   of << "PAI_C=" << par.PAI_C << "\t PAII_C=" << par.PAII_C << "\t AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
   of << "AROWC_r=" << par.AROWC_r << endl;
   of << "Norm2One=" << par.Norm2One << "\t num_que=" << par.num_que << "\t num_fold=" << par.num_fold << endl;
-  for (int i = 0; i<par.num_que; i++)//for each query
+
+  for (size_t i = 0; i<par.num_que; i++)//for each query
   {
 	  of << endl;
 	  of << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
 	  of << "Dataset & Algorithm & Query (%) & Accuracy & F-measure & Time (s)" << endl;
-	  for (int j = 0; j < par.num_alg; j++)
+	  for (size_t j = 0; j < alg_names.size(); j++)
 	  {
 		  of << left << setw(8) << alg_names[j] << "  &  "  << float(res_que_alg[i][j].que * 100) << "$\\pm$"<< res_que_alg[i][j].std_que * 100;
 		  of << "  &  " << res_que_alg[i][j].acc  << "$\\pm$" <<  res_que_alg[i][j].std_acc ;
@@ -656,10 +691,11 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   }
   of.close();
 
+  /* output with desired order
   of_name = output_dir + this->data_name;
   of_name += "_fixed_in.txt";
-  int a[6];
- a[0]=19; a[1]=1; a[2]=10;a[3]=13;a[4]=18;a[5]=17;
+  // int a[6];
+  // a[0]=19; a[1]=1; a[2]=10;a[3]=13;a[4]=18;a[5]=17;
 //  ofstream of;
   of.open(of_name.c_str());
   of.precision(3);
@@ -674,7 +710,7 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
 	  of << endl ;
 	  of << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
 	  of << "Dataset & Algorithm & Query (%) & Accuracy & Time (s)" << endl;
-	  for (int ind_alg = 0; ind_alg < 6; ind_alg++)
+	  for (int ind_alg = 0; ind_alg < alg_names.size(); ind_alg++)
 	  {
 		  int j = a[ind_alg];
 		  of << left << setw(8)  << alg_names[j] << "  &  " << res_que_alg[i][j].que * 100 << "$\\pm$" << res_que_alg[i][j].std_que * 100;
@@ -685,6 +721,7 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
 	  of << endl;
   }
   of.close();
+  */
 
 }//end of function
 
@@ -714,8 +751,13 @@ void CExperiment::Find_best_parameter()
 		cout << "/******************************************/" << endl;
 		cout << "max_PAI_F1=" <<"\t best_PAI_C="<< endl;
 		of << "/******************************************/" << endl;
-		of <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
-		cout <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
+		if (par.F1_or_acc){
+			of <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
+			cout <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
+		}else{
+			of <<"PAI_C\t Acc\t F1\t Max_Acc" << endl;
+			cout <<"PAI_C\t Acc\t F1\t Max_Acc" << endl;
+		}
 		for (int i = 0; i < 11; i++)
 		{
 			double C_Test = pow(2, -5 +  i);
@@ -724,7 +766,7 @@ void CExperiment::Find_best_parameter()
 			pa->SetAlgName("PAI");
 			double tmp_acc = 0.0;
 			double tmp_F1 = 0.0;
-			for (int  j = 0; j < par.num_fold; j++)
+			for (size_t  j = 0; j < par.num_fold; j++)
 			{
 				par.Generate_permutation(data.n);
 				result_tmp.Reset();
@@ -755,6 +797,8 @@ void CExperiment::Find_best_parameter()
 		par.PAI_C = best_PAI_C;		
 		cout << "/******************************************/" << endl;
 		of << "/******************************************/" << endl;
+		of << "Best PAI_C: \t" << par.PAI_C << endl;
+		cout << "Best PAI_C: \t" << par.PAI_C << endl;
 		out_file_figure << endl;
 		delete pa;
 	}
@@ -764,8 +808,13 @@ void CExperiment::Find_best_parameter()
 		cout << "/******************************************/" << endl;
 		cout << "Begin to find best parameters for PAII algorithm " << endl;
 		of << "/******************************************/" << endl;
-		of << "PAII_C\t Acc\t F1\t Max_F1 \n";
-		cout << "PAII_C\t Acc\t F1\t Max_F1 \n";
+		if (par.F1_or_acc){
+			of <<"PAII_C\t Acc\t F1\t Max_F1" << endl;
+			cout <<"PAII_C\t Acc\t F1\t Max_F1" << endl;
+		}else{
+			of <<"PAII_C\t Acc\t F1\t Max_Acc" << endl;
+			cout <<"PAII_C\t Acc\t F1\t Max_Acc" << endl;
+		}
 		for (int i = 0; i < 11; i++)
 		{
 			double C_Test = pow(2, -5 +  i);
@@ -773,7 +822,7 @@ void CExperiment::Find_best_parameter()
 			par.PAII_C = C_Test;
 			pa->SetAlgName("PAII");
 			double tmp_acc = 0.0, tmp_F1 = 0.0;
-			for (int j = 0; j < par.num_fold; j++)
+			for (size_t j = 0; j < par.num_fold; j++)
 			{
 				par.Generate_permutation(data.n);
 				result_tmp.Reset();
@@ -804,6 +853,8 @@ void CExperiment::Find_best_parameter()
 		par.PAII_C = best_PAII_C;		
 		cout << "/******************************************/" << endl;
 		of << "/******************************************/" << endl;
+		of << "Best PAII_C:\t" << par.PAII_C << endl;		
+		cout << "Best PAII_C:\t" << par.PAII_C << endl;		
 		out_file_figure << endl;
 		delete pa;
 	}
@@ -812,8 +863,15 @@ void CExperiment::Find_best_parameter()
 		cout << "/******************************************/" << endl;
 		of << "/******************************************/" << endl;
 		cout << "Begin to find best parameters for AROW algorithm" << endl;
-		cout << "r\t eta\t acc\t f1\t max_F1\n";
-		of << "r\t eta\t acc\t f1\t max_F1\n";
+		
+		if (par.F1_or_acc){
+			of <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_F1" << endl;
+			cout <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_F1" << endl;
+		}else{
+			of <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_Acc" << endl;
+			cout <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_Acc" << endl;
+		}
+
 		double max_AROW_Acc = 0.0, best_r = 0.0, best_eta = 0.0;
 		CModel *arow  = NULL;
 		string alg_name;
@@ -836,7 +894,7 @@ void CExperiment::Find_best_parameter()
 				par.AROW_r = r;
 				par.AROW_eta = eta;
 				double tmp_F1=0.0,tmp_acc=0.0;								
-				for (int i = 0; i < par.num_fold; i++)
+				for (size_t i = 0; i < par.num_fold; i++)
 				{
 					par.Generate_permutation(data.n);
 					result_tmp.Reset();
@@ -874,6 +932,8 @@ void CExperiment::Find_best_parameter()
 		//cout << "\t Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
 		cout << "/******************************************/" << endl;
 		of << "/******************************************/" << endl;
+		of << "Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
+		cout << "Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
 		out_file_figure << endl;
 	}
 
@@ -882,8 +942,15 @@ void CExperiment::Find_best_parameter()
 		cout << "/******************************************/" << endl;
 		of << "/******************************************/" << endl;
 		cout << "Begin to find best parameters for AROWC algorithm" << endl;
-		cout << "r\t acc\t f1\t max_F1\n";
-		of << "r\t acc\t f1\t max_F1\n";
+		
+		if (par.F1_or_acc){
+			of <<"AROWC_r\t Acc\t F1\t Max_F1" << endl;
+			cout <<"AROWC_r\t Acc\t F1\t Max_F1" << endl;
+		}else{
+			of <<"AROWC_r\t Acc\t F1\t Max_Acc" << endl;
+			cout <<"AROWC_r\t Acc\t F1\t Max_Acc" << endl;
+		}
+
 		double max_AROWC_Acc = 0.0, best_r = 0.0;
 		CModel *arowc  = NULL;
 		string alg_name;
@@ -904,7 +971,7 @@ void CExperiment::Find_best_parameter()
 			par.AROWC_r = r;
 			
 			double tmp_F1=0.0,tmp_acc=0.0;								
-			for (int i = 0; i < par.num_fold; i++)
+			for (size_t i = 0; i < par.num_fold; i++)
 			{
 				par.Generate_permutation(data.n);
 				result_tmp.Reset();
@@ -939,14 +1006,12 @@ void CExperiment::Find_best_parameter()
 		//cout << "\t Best AROW_r=" << par.AROW_r << endl;
 		cout << "/******************************************/" << endl;
 		of << "/******************************************/" << endl;
+		of << "Best AROWC_r=" << par.AROWC_r << endl;
+		cout << "Best AROWC_r=" << par.AROWC_r << endl;
+
 		out_file_figure << endl;
 	}
 
-	of << endl;
-	of << "Best PAI_C: \t" << par.PAI_C << endl;
-	of << "Best PAII_C:\t" << par.PAII_C << endl;
-	of << "Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
-	of << "Best AROWC_r=" << par.AROWC_r << endl;
 	of.close();
 	out_file_figure.close();
 }
