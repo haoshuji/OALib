@@ -24,7 +24,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
-
+#include <time.h>
 using namespace std;
 
 class CExperiment
@@ -37,7 +37,7 @@ class CExperiment
 		string data_fullpath;
 		string output_dir;
 		string setting_file_fullpath;
-        
+        char date_info [80];
 		
     public:
         /* ====================  LIFECYCLE     ======================================= */                             /* constructor */

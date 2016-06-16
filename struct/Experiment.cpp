@@ -25,10 +25,16 @@
 #define _CRT_SECURE_NO_DEPRECATE
 #include "Experiment.h"
 #include <iomanip>
+#include <time.h>
+
 using namespace std;
 CExperiment::CExperiment()
 {
-  
+  time_t raw_time;
+  struct tm * timeinfo;
+  time(&raw_time);
+  timeinfo = localtime(&raw_time);
+  strftime(date_info, 80, "%F", timeinfo);
 }
 
 void CExperiment::Parse_command_line(int argc, char **argv)
@@ -73,12 +79,12 @@ void CExperiment::Exit_with_help( )
 {
     cout << "Usage: models [options] data_set_file" << endl;
     cout << "options:" << endl;
-    cout << "-s setting_file: set the type of task" << endl;
+    cout << "-s setting_file: set the type fout_fixed task" << endl;
     cout << "-i input_data_dir" << endl;
 	cout << "-d data_set_file" << endl;
     cout << "-o output_dir" << endl;       
     exit(EXIT_FAILURE);        
-}       /* -----  end of function exit_with_help  ----- */
+}       /* -----  end fout_fixed function exit_with_help  ----- */
 
 void CExperiment::Run_binary_experiment(int argc, char **argv)
 {   
@@ -243,7 +249,7 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
 	  alg_names.push_back("AAROWD2"); 
 	  alg_names.push_back("RAROWD");
 
-	  // crammer paper, passive query strategy which query all of the instances
+	  // crammer paper, passive query strategy which query all fout_fixed the instances
 	  // models[3] = new CModelAROWD;
 	  // alg_names.push_back("AROWCD");
   }
@@ -439,7 +445,7 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
 		  */
 
 		  //ASOP
-		  par.b = b;
+		  par.b = b2;
 		  models[2]->SetAlgName(alg_names[k_alg]);
 		  result_tmp.Reset(); par.Reset(data.d, data.n);
 		  models[2]->Learning(&result_tmp, &data, &par);
@@ -530,8 +536,8 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
 		  // cout << alg_names[k_alg] << "\t" << result[i_que][k_alg][j_fold].que << "\t" << result[i_que][k_alg][j_fold].acc << "\t" << result[i_que][k_alg][j_fold].time << endl;
 		  // k_alg++;
 
-      }//end of second loop, cross validation      
-  }//end of first loop, different query ratio
+      }//end fout_fixed second loop, cross validation      
+  }//end fout_fixed first loop, different query ratio
   
   //OutputResult(&result);
 
@@ -547,7 +553,7 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
 	  }
   }
 
-  //sum of fold
+  //sum fout_fixed fold
   for (size_t i = 0; i < par.num_que; ++i)
   {
 	  for (size_t j = 0; j < alg_names.size(); ++j)
@@ -589,153 +595,169 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   }
 
   //output varied query ratio result  
-  string output_file_fullpath = output_dir + this->data_name+".txt";
-  cout << "output_file_name = " << output_file_fullpath << endl;
-  ofstream out_file(output_file_fullpath.c_str());
+  string fout_varied_name = output_dir + this->data_name + "_";
+  fout_varied_name.append(this->date_info);
+  fout_varied_name += ".txt";
+  cout << "output_file_name = " << fout_varied_name << endl;
+  ofstream fout_varied(fout_varied_name.c_str());
   for (size_t j = 0; j<alg_names.size(); j++)
   {
 	  //different query_ratio
-  	  out_file << alg_names[j] << endl;
-  	  out_file << "que ";
+  	  fout_varied << alg_names[j] << endl;
+  	  fout_varied << "que ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].que << " ";
+		  fout_varied << res_que_alg[i][j].que << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
 
 	  //std_que
-	  out_file << "std_que ";
+	  fout_varied << "std_que ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].std_que << " ";
+		  fout_varied << res_que_alg[i][j].std_que << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
 
 	  //different query accuracy
-	  out_file << "acc ";
+	  fout_varied << "acc ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].acc << " ";
+		  fout_varied << res_que_alg[i][j].acc << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
 
 	  //std_acc
-	  out_file << "std_acc ";
+	  fout_varied << "std_acc ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].std_acc << " ";
+		  fout_varied << res_que_alg[i][j].std_acc << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
 
 	  //different f1 measure
-	  out_file << "f1 ";
+	  fout_varied << "f1 ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].F1 << " ";
+		  fout_varied << res_que_alg[i][j].F1 << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
 
 	  //std_f1
-	  out_file << "std_f1 ";
+	  fout_varied << "std_f1 ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].std_F1 << " ";
+		  fout_varied << res_que_alg[i][j].std_F1 << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
 
 	  //different time
-	  out_file << "time ";
+	  fout_varied << "time ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].time << " ";
+		  fout_varied << res_que_alg[i][j].time << " ";
 	  }
-	  out_file << endl;	 
+	  fout_varied << endl;	 
 
 	  //std_time
-	  out_file << "std_time ";
+	  fout_varied << "std_time ";
 	  for (size_t i = 0; i<par.num_que; i++)
 	  {
-		  out_file << res_que_alg[i][j].std_time << " ";
+		  fout_varied << res_que_alg[i][j].std_time << " ";
 	  }
-	  out_file << endl;
+	  fout_varied << endl;
   }
-  out_file.close();
+  fout_varied.close();
   
   //output fixed query ratio
-  string of_name = output_dir + this->data_name + "_fixed.txt";
-  ofstream of(of_name.c_str());
+  string fout_fixed_name = output_dir + this->data_name + "_fixed_";
+  fout_fixed_name.append(this->date_info);
+  fout_fixed_name += ".txt";
+  ofstream fout_fixed(fout_fixed_name.c_str());
 
-  of.precision(3);
-  of << std::fixed;
+  fout_fixed.precision(3);
+  fout_fixed << std::fixed;
 
   //write basic information
-  of << "Data\t" << " # Features\t" << "# Instances\t"<<" # Positive Instances\t" << "# Negative Instances" << endl;
-  of << this->data_name << "\t" << data.d << "\t" << data.n <<"\t" << data.num_pos << "\t" <<data.num_neg<< endl;
-  of << "PAI_C=" << par.PAI_C << "\t PAII_C=" << par.PAII_C << "\t AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
-  of << "AROWC_r=" << par.AROWC_r << endl;
-  of << "Norm2One=" << par.Norm2One << "\t num_que=" << par.num_que << "\t num_fold=" << par.num_fold << endl;
+  fout_fixed << "Data\t" << " # Features\t" << "# Instances\t"<<" # Positive Instances\t" << "# Negative Instances" << endl;
+  fout_fixed << this->data_name << "\t" << data.d << "\t" << data.n <<"\t" << data.num_pos << "\t" <<data.num_neg<< endl;
+  fout_fixed << "PAI_C=" << par.PAI_C << "\t PAII_C=" << par.PAII_C << "\t AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
+  fout_fixed << "AROWC_r=" << par.AROWC_r << endl;
+  fout_fixed << "Norm2One=" << par.Norm2One << "\t num_que=" << par.num_que << "\t num_fold=" << par.num_fold << endl;
 
   for (size_t i = 0; i<par.num_que; i++)//for each query
   {
-	  of << endl;
-	  of << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
-	  of << "Dataset & Algorithm & Query (%) & Accuracy & F-measure & Time (s)" << endl;
+	  fout_fixed << endl;
+	  fout_fixed << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
+	  fout_fixed << "Dataset & Algorithm & Query (%) & Accuracy & F-measure & Time (s)" << endl;
 	  for (size_t j = 0; j < alg_names.size(); j++)
 	  {
-		  of << left << setw(8) << alg_names[j] << "  &  "  << float(res_que_alg[i][j].que * 100) << "$\\pm$"<< res_que_alg[i][j].std_que * 100;
-		  of << "  &  " << res_que_alg[i][j].acc  << "$\\pm$" <<  res_que_alg[i][j].std_acc ;
-		  of << "  &  " << res_que_alg[i][j].F1   << "$\\pm$" <<  res_que_alg[i][j].std_F1;
-		  of << "  &  " << res_que_alg[i][j].time << "$\\pm$" <<  res_que_alg[i][j].std_time << endl;
+		  fout_fixed << left << setw(8) << alg_names[j] << "  &  "  << float(res_que_alg[i][j].que * 100) << "$\\pm$"<< res_que_alg[i][j].std_que * 100;
+		  fout_fixed << "  &  " << res_que_alg[i][j].acc  << "$\\pm$" <<  res_que_alg[i][j].std_acc ;
+		  fout_fixed << "  &  " << res_que_alg[i][j].F1   << "$\\pm$" <<  res_que_alg[i][j].std_F1;
+		  fout_fixed << "  &  " << res_que_alg[i][j].time << "$\\pm$" <<  res_que_alg[i][j].std_time << endl;
 	  }	  
-	  of << endl;
+	  fout_fixed << endl;
   }
-  of.close();
+  fout_fixed.close();
 
   /* output with desired order
-  of_name = output_dir + this->data_name;
-  of_name += "_fixed_in.txt";
+  fout_fixed_name = output_dir + this->data_name;
+  fout_fixed_name += "_fixed_in.txt";
   // int a[6];
   // a[0]=19; a[1]=1; a[2]=10;a[3]=13;a[4]=18;a[5]=17;
-//  ofstream of;
-  of.open(of_name.c_str());
-  of.precision(3);
-  of << std::fixed;
-  of << "Data\t" << " # Features\t" << "# Instances\t"<<" # Positive Instances\t" << "# Negative Instances" << endl;
-  of << this->data_name << "\t" << data.d << "\t" << data.n <<"\t" << data.num_pos << "\t" <<data.num_neg<< endl;
-  of << "PAI_C=" << par.PAI_C << "\t PAII_C=" << par.PAII_C << "\t AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
-  of << "AROWC_r=" << par.AROWC_r << endl;
-  of << "Norm2One=" << par.Norm2One << "\t num_que=" << par.num_que << "\t num_fold=" << par.num_fold << endl;
+//  ofstream fout_fixed;
+  fout_fixed.open(fout_fixed_name.c_str());
+  fout_fixed.precision(3);
+  fout_fixed << std::fixed;
+  fout_fixed << "Data\t" << " # Features\t" << "# Instances\t"<<" # Positive Instances\t" << "# Negative Instances" << endl;
+  fout_fixed << this->data_name << "\t" << data.d << "\t" << data.n <<"\t" << data.num_pos << "\t" <<data.num_neg<< endl;
+  fout_fixed << "PAI_C=" << par.PAI_C << "\t PAII_C=" << par.PAII_C << "\t AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
+  fout_fixed << "AROWC_r=" << par.AROWC_r << endl;
+  fout_fixed << "Norm2One=" << par.Norm2One << "\t num_que=" << par.num_que << "\t num_fold=" << par.num_fold << endl;
   for (int i = 0; i<par.num_que; i++)//for each query
   {
-	  of << endl ;
-	  of << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
-	  of << "Dataset & Algorithm & Query (%) & Accuracy & Time (s)" << endl;
+	  fout_fixed << endl ;
+	  fout_fixed << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
+	  fout_fixed << "Dataset & Algorithm & Query (%) & Accuracy & Time (s)" << endl;
 	  for (int ind_alg = 0; ind_alg < alg_names.size(); ind_alg++)
 	  {
 		  int j = a[ind_alg];
-		  of << left << setw(8)  << alg_names[j] << "  &  " << res_que_alg[i][j].que * 100 << "$\\pm$" << res_que_alg[i][j].std_que * 100;
-		  of << "  &  " << res_que_alg[i][j].acc  << "$\\pm$"  << res_que_alg[i][j].std_acc ;
-		 // of << " & " << setprecision(3)<< res_que_alg[i][j].F1   << "$\\pm$" << setprecision(3) << res_que_alg[i][j].std_F1;
-		  of << "  &  " << res_que_alg[i][j].time << "$\\pm$"  << res_que_alg[i][j].std_time << endl;
+		  fout_fixed << left << setw(8)  << alg_names[j] << "  &  " << res_que_alg[i][j].que * 100 << "$\\pm$" << res_que_alg[i][j].std_que * 100;
+		  fout_fixed << "  &  " << res_que_alg[i][j].acc  << "$\\pm$"  << res_que_alg[i][j].std_acc ;
+		 // fout_fixed << " & " << setprecision(3)<< res_que_alg[i][j].F1   << "$\\pm$" << setprecision(3) << res_que_alg[i][j].std_F1;
+		  fout_fixed << "  &  " << res_que_alg[i][j].time << "$\\pm$"  << res_que_alg[i][j].std_time << endl;
 	  }	  
-	  of << endl;
+	  fout_fixed << endl;
   }
-  of.close();
+  fout_fixed.close();
   */
 
-}//end of function
+}//end fout_fixed function
 
 void CExperiment::Find_best_parameter()
-{		
-	string filename = this->output_dir + data_name + ".par.txt"; // Model[j]->Get_alg_name();
-	cout << "output_file_name = " << filename << endl;
-	ofstream of(filename.c_str());
-	string out_file_figure_name = this->output_dir + data_name + "_par_figure.txt";
+{	
+	if (!par.find_PAI_C && !par.find_PAII_C && !par.find_AROW_r && !par.find_AROW_eta && !par.find_AROWC_r)
+	{
+		return;
+	}	
 
-	ofstream out_file_figure(out_file_figure_name.c_str());
 
-	if (!of.is_open()){
-		cout << filename << "\t could not be open\n";
+	string fout_par_name = this->output_dir + data_name + "_par_";
+	fout_par_name.append(date_info);
+	fout_par_name += ".txt"; // Model[j]->Get_alg_name();
+	
+	cout << "output_file_name = " << fout_par_name << endl;
+	ofstream fout_par(fout_par_name.c_str());
+
+	string fout_par_figure_name = this->output_dir + data_name + "_par_figure_";
+	fout_par_figure_name.append(date_info);
+	fout_par_figure_name += ".txt";
+
+	ofstream fout_par_fig(fout_par_figure_name.c_str());
+
+	if (!fout_par.is_open()){
+		cout << fout_par_name << "\t could not be open\n";
 		getchar();
 		exit(1);
 	}
@@ -750,12 +772,12 @@ void CExperiment::Find_best_parameter()
 		cout << "Begin to find best parameters for PAI algorithm " << endl;
 		cout << "/******************************************/" << endl;
 		cout << "max_PAI_F1=" <<"\t best_PAI_C="<< endl;
-		of << "/******************************************/" << endl;
+		fout_par << "/******************************************/" << endl;
 		if (par.F1_or_acc){
-			of <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
+			fout_par <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
 			cout <<"PAI_C\t Acc\t F1\t Max_F1" << endl;
 		}else{
-			of <<"PAI_C\t Acc\t F1\t Max_Acc" << endl;
+			fout_par <<"PAI_C\t Acc\t F1\t Max_Acc" << endl;
 			cout <<"PAI_C\t Acc\t F1\t Max_Acc" << endl;
 		}
 		for (int i = 0; i < 11; i++)
@@ -783,23 +805,23 @@ void CExperiment::Find_best_parameter()
 					max_PAI_Acc = tmp_F1;
 					best_PAI_C = C_Test;
 				}
-				out_file_figure << tmp_F1 << " ";
+				fout_par_fig << tmp_F1 << " ";
 			}else{
 				if (tmp_acc > max_PAI_Acc){
 					max_PAI_Acc = tmp_acc;
 					best_PAI_C = C_Test;
 				}
-				out_file_figure << tmp_acc << " ";
+				fout_par_fig << tmp_acc << " ";
 			}
-			of << par.PAI_C << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_PAI_Acc << endl;
+			fout_par << par.PAI_C << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_PAI_Acc << endl;
 			cout << par.PAI_C << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_PAI_Acc << endl;
 		}
 		par.PAI_C = best_PAI_C;		
 		cout << "/******************************************/" << endl;
-		of << "/******************************************/" << endl;
-		of << "Best PAI_C: \t" << par.PAI_C << endl;
+		fout_par << "/******************************************/" << endl;
+		fout_par << "Best PAI_C: \t" << par.PAI_C << endl;
 		cout << "Best PAI_C: \t" << par.PAI_C << endl;
-		out_file_figure << endl;
+		fout_par_fig << endl;
 		delete pa;
 	}
 
@@ -807,12 +829,12 @@ void CExperiment::Find_best_parameter()
 		CModel *pa = new CModelPA;
 		cout << "/******************************************/" << endl;
 		cout << "Begin to find best parameters for PAII algorithm " << endl;
-		of << "/******************************************/" << endl;
+		fout_par << "/******************************************/" << endl;
 		if (par.F1_or_acc){
-			of <<"PAII_C\t Acc\t F1\t Max_F1" << endl;
+			fout_par <<"PAII_C\t Acc\t F1\t Max_F1" << endl;
 			cout <<"PAII_C\t Acc\t F1\t Max_F1" << endl;
 		}else{
-			of <<"PAII_C\t Acc\t F1\t Max_Acc" << endl;
+			fout_par <<"PAII_C\t Acc\t F1\t Max_Acc" << endl;
 			cout <<"PAII_C\t Acc\t F1\t Max_Acc" << endl;
 		}
 		for (int i = 0; i < 11; i++)
@@ -839,36 +861,36 @@ void CExperiment::Find_best_parameter()
 					max_PAII_Acc = tmp_F1;
 					best_PAII_C = C_Test;
 				}
-				out_file_figure << tmp_F1 << " ";
+				fout_par_fig << tmp_F1 << " ";
 			}else{
 				if (tmp_acc > max_PAII_Acc){
 					max_PAII_Acc = tmp_acc;
 					best_PAII_C = C_Test;
 				}
-				out_file_figure << tmp_acc << " ";
+				fout_par_fig << tmp_acc << " ";
 			}
-			of << par.PAII_C << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_PAII_Acc << endl;
+			fout_par << par.PAII_C << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_PAII_Acc << endl;
 			cout << par.PAII_C << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_PAII_Acc << endl;
 		}
 		par.PAII_C = best_PAII_C;		
 		cout << "/******************************************/" << endl;
-		of << "/******************************************/" << endl;
-		of << "Best PAII_C:\t" << par.PAII_C << endl;		
+		fout_par << "/******************************************/" << endl;
+		fout_par << "Best PAII_C:\t" << par.PAII_C << endl;		
 		cout << "Best PAII_C:\t" << par.PAII_C << endl;		
-		out_file_figure << endl;
+		fout_par_fig << endl;
 		delete pa;
 	}
 	
 	if (par.find_AROW_eta && par.find_AROW_r){
 		cout << "/******************************************/" << endl;
-		of << "/******************************************/" << endl;
+		fout_par << "/******************************************/" << endl;
 		cout << "Begin to find best parameters for AROW algorithm" << endl;
 		
 		if (par.F1_or_acc){
-			of <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_F1" << endl;
+			fout_par <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_F1" << endl;
 			cout <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_F1" << endl;
 		}else{
-			of <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_Acc" << endl;
+			fout_par <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_Acc" << endl;
 			cout <<"AROW_r\t AROW_eta\t Acc\t F1\t Max_Acc" << endl;
 		}
 
@@ -912,16 +934,16 @@ void CExperiment::Find_best_parameter()
 						best_r = par.AROW_r;
 						best_eta = par.AROW_eta;					
 					}
-					out_file_figure << tmp_F1 << " ";
+					fout_par_fig << tmp_F1 << " ";
 				}else{
 					if (tmp_acc > max_AROW_Acc){
 						max_AROW_Acc = tmp_acc;
 						best_r = par.AROW_r;
 						best_eta = par.AROW_eta;					
 					}
-					out_file_figure << tmp_acc << " ";
+					fout_par_fig << tmp_acc << " ";
 				}
-				of << par.AROW_r << "\t" << par.AROW_eta << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_AROW_Acc << endl;
+				fout_par << par.AROW_r << "\t" << par.AROW_eta << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_AROW_Acc << endl;
 				cout << par.AROW_r << "\t" << par.AROW_eta << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_AROW_Acc << endl;
 				//cout << "Time:\t" << result_tmp.time << endl;
 			}
@@ -931,23 +953,23 @@ void CExperiment::Find_best_parameter()
 		delete arow;		
 		//cout << "\t Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
 		cout << "/******************************************/" << endl;
-		of << "/******************************************/" << endl;
-		of << "Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
+		fout_par << "/******************************************/" << endl;
+		fout_par << "Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
 		cout << "Best AROW_r=" << par.AROW_r << "\t AROW_eta=" << par.AROW_eta << endl;
-		out_file_figure << endl;
+		fout_par_fig << endl;
 	}
 
 	if(par.find_AROWC_r == 1.0)
 	{
 		cout << "/******************************************/" << endl;
-		of << "/******************************************/" << endl;
+		fout_par << "/******************************************/" << endl;
 		cout << "Begin to find best parameters for AROWC algorithm" << endl;
 		
 		if (par.F1_or_acc){
-			of <<"AROWC_r\t Acc\t F1\t Max_F1" << endl;
+			fout_par <<"AROWC_r\t Acc\t F1\t Max_F1" << endl;
 			cout <<"AROWC_r\t Acc\t F1\t Max_F1" << endl;
 		}else{
-			of <<"AROWC_r\t Acc\t F1\t Max_Acc" << endl;
+			fout_par <<"AROWC_r\t Acc\t F1\t Max_Acc" << endl;
 			cout <<"AROWC_r\t Acc\t F1\t Max_Acc" << endl;
 		}
 
@@ -988,15 +1010,15 @@ void CExperiment::Find_best_parameter()
 					max_AROWC_Acc = tmp_F1;
 					best_r = par.AROWC_r;					
 				}
-				out_file_figure << tmp_F1 << " ";
+				fout_par_fig << tmp_F1 << " ";
 			}else{
 				if (tmp_acc > max_AROWC_Acc){
 				max_AROWC_Acc = tmp_acc;
 				best_r = par.AROWC_r;					
 				}
-				out_file_figure << tmp_acc << " ";
+				fout_par_fig << tmp_acc << " ";
 			}
-			of << par.AROWC_r<< "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_AROWC_Acc << endl;
+			fout_par << par.AROWC_r<< "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_AROWC_Acc << endl;
 			cout << par.AROWC_r << "\t" << tmp_acc << "\t" << tmp_F1 << "\t" << max_AROWC_Acc << endl;
 		
 		}
@@ -1005,13 +1027,13 @@ void CExperiment::Find_best_parameter()
 		
 		//cout << "\t Best AROW_r=" << par.AROW_r << endl;
 		cout << "/******************************************/" << endl;
-		of << "/******************************************/" << endl;
-		of << "Best AROWC_r=" << par.AROWC_r << endl;
+		fout_par << "/******************************************/" << endl;
+		fout_par << "Best AROWC_r=" << par.AROWC_r << endl;
 		cout << "Best AROWC_r=" << par.AROWC_r << endl;
 
-		out_file_figure << endl;
+		fout_par_fig << endl;
 	}
 
-	of.close();
-	out_file_figure.close();
+	fout_par.close();
+	fout_par_fig.close();
 }
