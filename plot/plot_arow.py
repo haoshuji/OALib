@@ -19,7 +19,7 @@ ord = []
 all_que = []
 
 # input_loc = '/Users/Snail/Dropbox/share(hoi-shuji)/SOAL/SOAL-ICDM16-article/figures/varied/'
-input_loc = './15Jun/'
+input_loc = '../results/'
 output = input_loc
 
 x_label = 'Varied Query Ratio'
@@ -50,7 +50,7 @@ output_ext = ".pdf"
 datas = ['url','webspam','a8a','aloi','clean','covtype_scale','ijcnn1',\
 'kddcup99','letter','magic04','optdigits','satimage','spambase','w8a']
 
-datas = ['HIGGS']#,'covtype_scale']
+datas = ['HIGGS.b_2016-06-17']#,'covtype_scale']
 
 for data in datas:
 	print data
@@ -63,7 +63,7 @@ for data in datas:
 		legend_font_size = 12
 
 	# make sure the result file exists
-	data_fullname = input_loc + data + '.b.txt'
+	data_fullname = input_loc + data + '.txt'
 	if os.path.isfile(data_fullname) == False:
 		print data_fullname + "\t does not exist"
 		continue
@@ -232,11 +232,11 @@ for data in datas:
 		x_ticks['SOAL-d']=[3]+range(5,d)
 		x_ticks['SORL-d']=x_ticks['SOAL-d']
 		x_ticks['SOAL-M-d']=[8,9] + range(10,d)
-	elif data == 'HIGGS':
+	elif 'HIGGS' in data:
 		x_ticks['APE']=range(5,d);
 		x_ticks['APAII']=range(2,d);
-		x_ticks['ASOP']=range(0,d);
-		x_ticks['SOAL']=[0]+range(4,d)
+		x_ticks['ASOP']=range(5,d);
+		x_ticks['SOAL']=[0]+range(8,d)
 		x_ticks['SORL']=x_ticks['SOAL']
 		x_ticks['SOAL-M']=range(4,d)
 	else:
@@ -341,7 +341,7 @@ for data in datas:
 		legend_location = 'lower left'
 
 	ax.set_xscale('log')
-	# plt.legend(loc=legend_location, ncol=3, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
+	plt.legend(loc=legend_location, ncol=3, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
 	# if data in ['HIGGS','satimage', 'webspam', 'news20', 'url']:
 		# plt.legend(loc=legend_location, ncol=1, shadow=True, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
 	plt.savefig(output + data + '_' + metric + '_log' + output_ext)

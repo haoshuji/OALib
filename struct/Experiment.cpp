@@ -675,8 +675,8 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   fout_fixed_name += ".txt";
   ofstream fout_fixed(fout_fixed_name.c_str());
 
-  fout_fixed.precision(3);
-  fout_fixed << std::fixed;
+  // fout_fixed.precision(3);
+  // fout_fixed << std::fixed;
 
   //write basic information
   fout_fixed << "Data\t" << " # Features\t" << "# Instances\t"<<" # Positive Instances\t" << "# Negative Instances" << endl;
@@ -688,7 +688,8 @@ void CExperiment::Run_binary_experiment(int argc, char **argv)
   for (size_t i = 0; i<par.num_que; i++)//for each query
   {
 	  fout_fixed << endl;
-	  fout_fixed << "b=" <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << " \t b2= " << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
+	  fout_fixed << "b=" << par.b_start + i*par.que_increase_speed <<  pow(2.0, (par.b_start + i*par.que_increase_speed)) << endl;
+	  fout_fixed << "b2=" << par.b_start2 + i*par.que_increase_speed2 << pow(2.0, (par.b_start2 + i*par.que_increase_speed2)) << endl;
 	  fout_fixed << "Dataset & Algorithm & Query (%) & Accuracy & F-measure & Time (s)" << endl;
 	  for (size_t j = 0; j < alg_names.size(); j++)
 	  {

@@ -1,8 +1,8 @@
-num_que 20
+num_que 30
 b_start -15
 que_increase_speed 1
-b_start2 -30
-que_increase_speed2 2
+b_start2 -20
+que_increase_speed2 0.8
 num_ticks 10
 num_fold 10
 Mul2Bin 0
