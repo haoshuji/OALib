@@ -1,8 +1,4 @@
-
 # coding: utf-8
-
-# In[60]:
-
 import numpy as np
 import re
 import matplotlib.pyplot as plt
@@ -10,7 +6,6 @@ import matplotlib as mpl
 import os.path
 import shutil
 import glob
-# from matplotlib.font_manager import FontProperties
 
 mpl.rcParams['ps.fonttype']=42 # avoid using type 3 fonts
 mpl.rcParams['pdf.fonttype']=42 # avoid using type 3 fonts
@@ -18,8 +13,8 @@ mpl.rcParams['pdf.fonttype']=42 # avoid using type 3 fonts
 ord = []
 all_que = []
 
-# input_loc = '/Users/Snail/Dropbox/share(hoi-shuji)/SOAL/SOAL-ICDM16-article/figures/varied/'
-input_loc = '../results/'
+input_loc = '/Users/Snail/Dropbox/share(hoi-shuji)/SOAL/SOAL-TKDE/figures/varied/'
+# input_loc = '../results/'
 output = input_loc
 
 x_label = 'Varied Query Ratio'
@@ -32,11 +27,11 @@ elif metric == 'f1':
 else:
 	y_label = 'Accuracy'
 
-line_width=2.5
-marker_size = 7
-marker_edge_width = 1.5
-legend_size = 5
-legend_font_size = 5
+line_width=2
+marker_size = 5
+marker_edge_width = 1.2
+legend_size = 4
+legend_font_size = 4
 
 label_size = 18
 tick_size = 16
@@ -52,6 +47,7 @@ datas = ['url','webspam','a8a','aloi','clean','covtype_scale','ijcnn1',\
 
 datas = ['HIGGS.b_2016-06-17']#,'covtype_scale']
 
+datas = ['a8a', 'HIGGS_2016-06-17', 'covtype_scale', 'kddcup99', 'letter', 'magic04', 'optdigits', 'satimage', 'w8a']
 for data in datas:
 	print data
 
@@ -63,7 +59,8 @@ for data in datas:
 		legend_font_size = 12
 
 	# make sure the result file exists
-	data_fullname = input_loc + data + '.txt'
+	data_fullname = input_loc + data + '.b.txt'
+
 	if os.path.isfile(data_fullname) == False:
 		print data_fullname + "\t does not exist"
 		continue
@@ -262,15 +259,22 @@ for data in datas:
 		if real_alg in ['SOL', 'SOL-d']:
 			que = list(np.linspace(0,1,10))
 			res = results[alg][metric][0:len(que)]
+			error = [0]*len(que)
 			# print len(que), len(res), results[alg][metric][0]
 		else:
 			que = [ results[alg]['que'][ind] for ind in x_ticks[real_alg] ]
 			res = [ results[alg][metric][ind] for ind in x_ticks[real_alg] ]
+			error = [results[alg]['std_'+metric][ind] for ind in x_ticks[real_alg]]
 		if data in ['aloi']:
 			res.sort()
-		plt.plot(que, res ,lw = line_width, label = real_alg_names[i_alg],\
+
+		plt.errorbar(que, res, error, lw = line_width, label = real_alg_names[i_alg],\
 			 ls = '-', color = colors[i_alg], marker = markers[i_alg], \
 			 fillstyle = 'none',markersize = marker_size, mew = marker_edge_width)	
+
+		# plt.plot(que, res ,lw = line_width, label = real_alg_names[i_alg],\
+		# 	 ls = '-', color = colors[i_alg], marker = markers[i_alg], \
+		# 	 fillstyle = 'none',markersize = marker_size, mew = marker_edge_width)	
 	
 	# plt.yticks(y_limits[data])
 	# 
@@ -293,8 +297,9 @@ for data in datas:
 	# Put a legend to the right of the current axis
 	# ax.legend(loc='center left', bbox_to_anchor=(1, 0.5))
 
-	# plt.legend(loc=legend_location, ncol=3, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
-	plt.savefig(output + data + '_' + metric + output_ext)
+	if data == 'HIGGS_2016-06-17':
+		plt.legend(loc=legend_location, ncol=3, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
+	plt.savefig(output + data + '_' + metric +'_std' + output_ext)
 	plt.close(fig)
 
 	# print x_ticks
@@ -316,8 +321,11 @@ for data in datas:
 			error = [results[alg]['std_'+metric][ind] for ind in x_ticks[real_alg]]
 		if data in ['covtype_scale']:
 			res.sort()
-# 
-		plt.plot(que, res,  lw = line_width, label = real_alg_names[i_alg],\
+# # 
+# 		plt.plot(que, res,  lw = line_width, label = real_alg_names[i_alg],\
+# 			 ls = '-', color = colors[i_alg], marker = markers[i_alg], \
+# 			 fillstyle = 'none',markersize = marker_size, mew = marker_edge_width)	
+		plt.errorbar(que, res, error, lw = line_width, label = real_alg_names[i_alg],\
 			 ls = '-', color = colors[i_alg], marker = markers[i_alg], \
 			 fillstyle = 'none',markersize = marker_size, mew = marker_edge_width)	
 # 
@@ -341,8 +349,9 @@ for data in datas:
 		legend_location = 'lower left'
 
 	ax.set_xscale('log')
-	plt.legend(loc=legend_location, ncol=3, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
+	if data == 'HIGGS_2016-06-17':
+		plt.legend(loc=legend_location, ncol=3, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
 	# if data in ['HIGGS','satimage', 'webspam', 'news20', 'url']:
 		# plt.legend(loc=legend_location, ncol=1, shadow=True, fancybox=True,prop={'size':legend_size},fontsize=legend_font_size)
-	plt.savefig(output + data + '_' + metric + '_log' + output_ext)
+	plt.savefig(output + data + '_' + metric + '_log_std' + output_ext)
 	plt.close(fig)
